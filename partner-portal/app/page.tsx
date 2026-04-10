@@ -125,11 +125,9 @@ export default function PortalePage() {
 
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', background: '#0A2F5C', borderRadius: '16px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '28px' }}>⚓</span>
-            </div>
+            <img src="/logo.png" alt="Blu Alliance" style={{ width: '140px', height: 'auto', marginBottom: '16px' }} />
             <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#0A2F5C', margin: '0 0 6px' }}>Portale Partner</h1>
-            <p style={{ color: '#718096', fontSize: '14px', margin: 0 }}>Blu Alliance — Area Affiliati</p>
+            <p style={{ color: '#718096', fontSize: '14px', margin: 0 }}>Area Affiliati</p>
           </div>
 
           {/* Form */}
@@ -198,11 +196,8 @@ export default function PortalePage() {
       <header style={{ background: '#0A2F5C', padding: '0 24px', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }}>
         <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '22px' }}>⚓</span>
-            <div>
-              <div style={{ color: 'white', fontWeight: '700', fontSize: '15px', lineHeight: '1.2' }}>Blu Alliance</div>
-              <div style={{ color: '#00BCD4', fontSize: '11px' }}>Portale Partner</div>
-            </div>
+            <img src="/logo.png" alt="Blu Alliance" style={{ height: '36px', width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <div style={{ color: '#00BCD4', fontSize: '11px', borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '12px' }}>Portale Partner</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ textAlign: 'right' }}>
