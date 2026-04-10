@@ -34,7 +34,7 @@ const BROCHURE_EN_URL = 'https://wpzxvwenhjqnwhqowxms.supabase.co/storage/v1/obj
 const MATERIALI = [
   { nome: 'Catalogo Esperienze 2026 (IT)', icon: '🌐', link: 'https://catalogo.blualliancegroup.com', download: false },
   { nome: 'Brochure Esperienze 2026 (EN)', icon: '📄', link: BROCHURE_EN_URL, download: true },
-  { nome: 'Guida Concierge — Come prenotare', icon: '📋', link: '#guida', download: false },
+  { nome: 'Guida Concierge — Come prenotare', icon: '📋', link: 'https://wpzxvwenhjqnwhqowxms.supabase.co/storage/v1/object/public/materiali-partner/guida-concierge-2026.pdf', download: true },
 ]
 
 export default function PortalePage() {
