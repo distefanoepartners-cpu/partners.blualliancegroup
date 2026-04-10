@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { it } from 'date-fns/locale'
+import QRCode from 'react-qr-code'
 
 interface Affiliato {
   id: string
@@ -28,11 +29,12 @@ interface Commissione {
   commissione_dovuta: number
 }
 
+const BROCHURE_EN_URL = 'https://wpzxvwenhjqnwhqowxms.supabase.co/storage/v1/object/public/materiali-partner/brochure-en-2026.pdf'
+
 const MATERIALI = [
-  { nome: 'Brochure Tour Stagione 2026 (IT)', icon: '📄', link: 'https://catalogo.blualliancegroup.com' },
-  { nome: 'Brochure Tour Stagione 2026 (EN)', icon: '📄', link: 'https://catalogo.blualliancegroup.com' },
-  { nome: 'QR Code Affiliato', icon: '🔲', link: '#qr' },
-  { nome: 'Guida Concierge — Esperienze 2026', icon: '📋', link: '#guida' },
+  { nome: 'Brochure Esperienze 2026 (IT)', icon: '📄', link: 'https://catalogo.blualliancegroup.com', download: false },
+  { nome: 'Brochure Esperienze 2026 (EN)', icon: '📄', link: BROCHURE_EN_URL, download: true },
+  { nome: 'Guida Concierge — Come prenotare', icon: '📋', link: '#guida', download: false },
 ]
 
 export default function PortalePage() {
@@ -43,6 +45,37 @@ export default function PortalePage() {
   const [commissioni, setCommissioni] = useState<Commissione[]>([])
   const [copiato, setCopiato] = useState(false)
   const [meseSelezionato, setMeseSelezionato] = useState(format(new Date(), 'yyyy-MM'))
+  const [showQR, setShowQR] = useState(false)
+
+  function downloadQR() {
+    const svg = document.getElementById('qr-code-svg')
+    if (!svg) return
+    const svgData = new XMLSerializer().serializeToString(svg)
+    const canvas = document.createElement('canvas')
+    canvas.width = 400; canvas.height = 480
+    const ctx = canvas.getContext('2d')!
+    const img = new Image()
+    img.onload = () => {
+      ctx.fillStyle = 'white'
+      ctx.fillRect(0, 0, 400, 480)
+      ctx.drawImage(img, 40, 40, 320, 320)
+      ctx.fillStyle = '#0A2F5C'
+      ctx.font = 'bold 18px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('Prenota la tua esperienza in mare', 200, 400)
+      ctx.font = '14px Arial'
+      ctx.fillStyle = '#1565C0'
+      ctx.fillText(`blualliancegroup.com/?ref=${affiliato?.codice}`, 200, 428)
+      ctx.font = 'bold 16px Arial'
+      ctx.fillStyle = '#F5A623'
+      ctx.fillText(`Codice: ${affiliato?.codice}`, 200, 458)
+      const a = document.createElement('a')
+      a.download = `QR-BLU-${affiliato?.codice}.png`
+      a.href = canvas.toDataURL('image/png')
+      a.click()
+    }
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)))
+  }
 
   // Controlla sessione salvata
   useEffect(() => {
@@ -125,7 +158,7 @@ export default function PortalePage() {
 
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <img src="/logo.png" alt="Blu Alliance" style={{ width: '140px', height: 'auto', marginBottom: '16px' }} />
+            <img src="/logo.png" alt="Blu Alliance" style={{ width: '140px', height: 'auto', marginBottom: '16px', display: 'block', margin: '0 auto 16px' }} />
             <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#0A2F5C', margin: '0 0 6px' }}>Portale Partner</h1>
             <p style={{ color: '#718096', fontSize: '14px', margin: 0 }}>Area Affiliati</p>
           </div>
@@ -346,6 +379,45 @@ export default function PortalePage() {
           )}
         </div>
 
+        {/* QR CODE */}
+        <div style={{ background: 'white', borderRadius: '16px', padding: '24px', marginBottom: '20px', border: '1px solid #E2E8F0' }}>
+          <div style={{ fontSize: '15px', fontWeight: '700', color: '#0A2F5C', marginBottom: '16px' }}>🔲 Il tuo QR Code Personale</div>
+          <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
+            {/* QR Preview */}
+            <div style={{ background: 'white', padding: '16px', border: '2px solid #E2E8F0', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+              <QRCode
+                id="qr-code-svg"
+                value={link}
+                size={160}
+                fgColor="#0A2F5C"
+                bgColor="#FFFFFF"
+              />
+              <div style={{ fontSize: '11px', fontWeight: '700', color: '#F5A623', letterSpacing: '1px' }}>{affiliato.codice}</div>
+            </div>
+            {/* Info e download */}
+            <div style={{ flex: 1, minWidth: '200px' }}>
+              <p style={{ fontSize: '13px', color: '#4A5568', lineHeight: '1.6', marginBottom: '16px' }}>
+                Stampa il QR code e posizionalo in reception, nelle camere o nel materiale informativo. 
+                I tuoi ospiti lo scansionano e vengono tracciati automaticamente.
+              </p>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={downloadQR}
+                  style={{ background: '#0A2F5C', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  ⬇️ Scarica PNG
+                </button>
+                <button
+                  onClick={copiaLink}
+                  style={{ background: copiato ? '#48BB78' : '#F0F4F8', color: copiato ? 'white' : '#0A2F5C', border: '1.5px solid #E2E8F0', borderRadius: '10px', padding: '10px 20px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+                >
+                  {copiato ? '✅ Copiato' : '🔗 Copia link'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* MATERIALI */}
         <div style={{ background: 'white', borderRadius: '16px', padding: '24px', marginBottom: '20px', border: '1px solid #E2E8F0' }}>
           <div style={{ fontSize: '15px', fontWeight: '700', color: '#0A2F5C', marginBottom: '16px' }}>📁 Materiali Promozionali</div>
@@ -356,6 +428,7 @@ export default function PortalePage() {
                 href={mat.link}
                 target="_blank"
                 rel="noreferrer"
+                download={mat.download ? true : undefined}
                 style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: '#F7FAFC', borderRadius: '12px', border: '1.5px solid #E2E8F0', textDecoration: 'none', transition: 'border-color 0.2s', cursor: 'pointer' }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = '#00BCD4')}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = '#E2E8F0')}
@@ -363,7 +436,7 @@ export default function PortalePage() {
                 <span style={{ fontSize: '24px' }}>{mat.icon}</span>
                 <div>
                   <div style={{ fontSize: '13px', fontWeight: '500', color: '#2D3748', lineHeight: '1.3' }}>{mat.nome}</div>
-                  <div style={{ fontSize: '11px', color: '#1565C0', marginTop: '2px' }}>Scarica →</div>
+                  <div style={{ fontSize: '11px', color: '#1565C0', marginTop: '2px' }}>{mat.download ? 'Scarica PDF →' : 'Apri →'}</div>
                 </div>
               </a>
             ))}
