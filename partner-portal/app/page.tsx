@@ -32,7 +32,7 @@ interface Commissione {
 const BROCHURE_EN_URL = 'https://wpzxvwenhjqnwhqowxms.supabase.co/storage/v1/object/public/materiali-partner/brochure-en-2026.pdf'
 
 const MATERIALI = [
-  { nome: 'Brochure Esperienze 2026 (IT)', icon: '📄', link: 'https://catalogo.blualliancegroup.com', download: false },
+  { nome: 'Catalogo Esperienze 2026 (IT)', icon: '🌐', link: 'https://catalogo.blualliancegroup.com', download: false },
   { nome: 'Brochure Esperienze 2026 (EN)', icon: '📄', link: BROCHURE_EN_URL, download: true },
   { nome: 'Guida Concierge — Come prenotare', icon: '📋', link: '#guida', download: false },
 ]
