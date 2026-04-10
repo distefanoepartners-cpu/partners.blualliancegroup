@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blu: #0A2F5C;
+  --acqua: #00BCD4;
+  --oro: #F5A623;
+}
